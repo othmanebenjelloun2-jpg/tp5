@@ -10,7 +10,6 @@ body {
 
 h1 { color: #0066cc; }
 
-/* La webcam en haut à droite */
 #camera {
   position: fixed;
   top: 20px;
@@ -19,12 +18,11 @@ h1 { color: #0066cc; }
   height: 165px;
   border: 3px solid #0066cc;
   border-radius: 10px;
-  transform: scaleX(-1); /* effet miroir */
+  transform: scaleX(-1);
   background: #000;
-  z-index: 100;
+  z-index: 200;
 }
 
-/* Petit badge qui affiche l'état de la main */
 #status {
   position: fixed;
   top: 200px;
@@ -36,11 +34,53 @@ h1 { color: #0066cc; }
   border-radius: 8px;
   font-weight: bold;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  z-index: 100;
+  z-index: 200;
 }
 
-/* La boîte "info" qu'on affiche/cache avec la main.
-   display: flex au départ, JS le passera à "none". */
+#hidden-overlay {
+  position: fixed;
+  inset: 0;
+  background: #0a0a1a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 150;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+#hidden-overlay.visible {
+  opacity: 1;
+  pointer-events: all;
+}
+
+.overlay-content {
+  text-align: center;
+  color: #fff;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.overlay-content .thumb-icon {
+  font-size: 80px;
+  display: block;
+  margin-bottom: 20px;
+}
+
+.overlay-content p {
+  font-size: 1.4rem;
+  opacity: 0.8;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1);     opacity: 1; }
+  50%       { transform: scale(1.05); opacity: 0.8; }
+}
+
+body > *:not(#camera):not(#status):not(#hidden-overlay) {
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
 #info {
   display: flex;
   align-items: center;
@@ -53,11 +93,8 @@ h1 { color: #0066cc; }
   max-width: 700px;
 }
 
-#info .emoji {
-  font-size: 40px;
-}
+#info .emoji { font-size: 40px; }
 
-/* Les cartes du cours */
 .card {
   background: white;
   padding: 20px 25px;
