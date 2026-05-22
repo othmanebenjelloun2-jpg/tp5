@@ -87,30 +87,6 @@ function isThumbAndIndexClosed(landmarks) {
   return indexFolded && thumbFolded;
 }
 
-// Geste "Like" : POUCE levé
-//   - pouce levé : bout (4) très loin du poignet
-//   - autres doigts fermés : au moins 2 doigts repliés
-function isThumbsUp(landmarks) {
-  const wrist = landmarks[0];
-  const palmSize = distance(landmarks[0], landmarks[5]);
-  
-  // Pouce TRÈS levé (loin du poignet)
-  const thumbUp = distance(landmarks[4], wrist) > palmSize * 1.3;
-  
-  // Vérifier que les autres doigts sont repliés
-  const tips = [8, 12, 16, 20];
-  const pips = [6, 10, 14, 18];
-  let folded = 0;
-  
-  for (let i = 0; i < tips.length; i++) {
-    if (distance(landmarks[tips[i]], wrist) < distance(landmarks[pips[i]], wrist)) {
-      folded++;
-    }
-  }
-  
-  return thumbUp && folded >= 3; // Pouce levé ET au moins 3 doigts fermés
-}
-
 // ===================================================
 // 5. Réagir aux résultats : on modifie le CSS
 //    et on fait défiler la page.
@@ -124,13 +100,6 @@ function onResults(results) {
   }
 
   const landmarks = results.multiHandLandmarks[0];
-
-  // 👍 Si POUCE LEVÉ → on ferme le site
-  if (isThumbsUp(landmarks)) {
-    status.textContent = '👍 LIKE ! Fermeture...';
-    setTimeout(() => window.close(), 500);
-    return;
-  }
 
   // ✋ Main ouverte → on AFFICHE la boîte info
   // ✊ Sinon       → on la CACHE
